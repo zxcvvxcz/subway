@@ -1,10 +1,11 @@
 //각 역의 정보를 나타내는 node
 public class StationNode {
-    private final String id;
-    private final String name;
-    private final String line;
-    private StationNode next;
-    private long distance;           //dijkstra algorithm에서 최단 거리 저장
+    private final String id;    //고유 번호
+    private final String name;  //역 이름
+    private final String line;  //호선
+    private StationNode next;   //이름이 같고 호선 번호가 더 큰 노드
+    private long distance;           //시작점으로부터 최단 거리
+    // 인접한 역 사이 거리가 최대 1억이고 수십만개의 역이 존재할 수 있으므로 값을 long으로 받는다
     private EdgeList adjacentNodes; //인접한 노드들
 
     public StationNode(String id, String name, String line){
@@ -12,7 +13,7 @@ public class StationNode {
         this.name = name;
         this.line = line;
         this.next = null;
-        distance = Long.MAX_VALUE;
+        distance = Long.MAX_VALUE;  //distance는 가능한 최대값으로 초기화
         adjacentNodes = new EdgeList();
     }
 
@@ -55,30 +56,5 @@ public class StationNode {
     @Override
     public String toString() {
         return name;
-    }
-
-    @Override
-    public StationNode clone(){
-        StationNode clone = new StationNode(id,name,line);
-        clone.setDistance(distance);
-        for(Edge e: getAdjacentNodes().getEdges())
-            clone.adjacentNodes.add(e.getEndNode(), e.getWeight());
-        return clone;
-    }
-
-    @Override
-    public boolean equals(Object obj) {
-        if(obj == null)
-            return false;
-        else if(obj.getClass() != getClass())
-                return false;
-        else{
-            String name = ((StationNode)obj).getName();
-            if(name != this.name)
-                return false;
-        }
-        return true;
-    }
-
-
+    }   //마지막 경로 출력시 이름만 출력하기 위해 override
 }

@@ -2,8 +2,8 @@
 import java.util.ArrayList;
 
 public class EdgeList {
-    private ArrayList<Edge> edges;
-    private StationNode nodeInPath;
+    private ArrayList<Edge> edges;  //역과 역 사이 edge들의 집합
+    private StationNode nodeInPath; //이 edgeList를 가진 노드로 향하는 edge를 가진 노드(들어오는 edge의 시작 노드)
 
     public EdgeList(){
         edges = new ArrayList<>();
@@ -23,15 +23,15 @@ public class EdgeList {
     public void setNodeInPath(StationNode nodeInPath) {
         this.nodeInPath = nodeInPath;
     }
-    public void add(StationNode endNode, long weight){
+    public void add(StationNode endNode, int weight){  //새로운 edge 추가
         edges.add(new Edge(endNode, weight));
     }
 }
 
 class Edge{
-    private StationNode endNode;
-    private long weight;
-    public Edge(StationNode endNode, long weight){
+    private StationNode endNode;    //edge의 끝점
+    private int weight;            //인접한 역 사이 거리는 최대 1억이므로 int 사용
+    public Edge(StationNode endNode, int weight){
         this.endNode = endNode;
         this.weight = weight;
     }
@@ -47,7 +47,7 @@ class Edge{
         this.endNode = endNode;
     }
 
-    public void setWeight(long weight) {
+    public void setWeight(int weight) {
         this.weight = weight;
     }
 
