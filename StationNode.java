@@ -57,4 +57,23 @@ public class StationNode {
     public String toString() {
         return name;
     }   //마지막 경로 출력시 이름만 출력하기 위해 override
+    @Override
+    public StationNode clone(){     //같은 데이터로 여러번 검색하기 위해 검색 시 사본 이용
+        StationNode cloneNode = new StationNode(id,name,line);
+        cloneNode.setAdjacentNodes(adjacentNodes);
+        return cloneNode;
+    }
+
+    @Override
+    public boolean equals(Object obj) {     //Arraylist의 기능을 활용하기 위해 equals 새로 정의
+        //고유 번호로 노드를 구별
+        if(obj == null)
+            return false;
+        else if(obj.getClass() != getClass())
+            return false;
+        else{
+            return ((StationNode)obj).getId().equals(getId());
+        }
+
+    }
 }

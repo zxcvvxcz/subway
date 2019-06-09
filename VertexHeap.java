@@ -25,27 +25,38 @@ public class VertexHeap {
         this.vertexHeap = vertexHeap;
     }
 
-    public void DoHeapSort()  //힙 소트 코드(HW4 메소드 활용)
-    {
-        int len=vertexHeap.size();
-        for(int i=(len-1)/2;i>=0;i--)
-            PercolateDown(i,len-1);
-        for(int size=len-1;size>0;size--){
-            swap(size,0);
-            PercolateDown(0,size-1);
-        }
-    }
 
     public void PercolateDown(int i, int n){    //HW4 method 활용
         int child=2*i+1;
         int rightChild=2*(i+1);
         if(child<=n){
-            if((rightChild<=n) &&  (vertexHeap.get(child).getDistance() < vertexHeap.get(rightChild).getDistance()))
+            if((rightChild<=n) &&  (vertexHeap.get(child).getDistance() > vertexHeap.get(rightChild).getDistance()))
                 child=rightChild;
-            if(vertexHeap.get(i).getDistance() < vertexHeap.get(child).getDistance()){
+            if(vertexHeap.get(i).getDistance() > vertexHeap.get(child).getDistance()){
                 swap(i,child);
                 PercolateDown(child,n);
             }
         }
+    }
+
+    public void PercolateUp(int i){     //heap을 이루도록 노드 이동
+        int parent = (i-1) / 2;
+        if(i>0 && vertexHeap.get(parent).getDistance() > vertexHeap.get(i).getDistance()){
+            swap(parent,i);
+            PercolateUp(parent);
+        }
+    }
+
+    public StationNode heapDelete(){    //heap에서 노드 삭제
+        if(!vertexHeap.isEmpty()){
+            int last = vertexHeap.size() - 1;
+            StationNode root = vertexHeap.get(0);
+            vertexHeap.set(0,vertexHeap.get(last));
+            vertexHeap.remove(last--);
+            PercolateDown(0,last);
+            return root;
+        }
+        else
+            return null;
     }
 }
