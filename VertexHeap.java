@@ -13,18 +13,11 @@ public class VertexHeap {
             stationNode.getAdjacentNodes().setNodeInPath(null);
         }
     }
-    public ArrayList<StationNode> getVertexHeap() {
-        return vertexHeap;
-    }
     public void swap(int num1, int num2){   //arraylist 내의 두 노드의 위치를 바꾸는 메소드
         StationNode temp = vertexHeap.get(num1);
         vertexHeap.set(num1, vertexHeap.get(num2));
         vertexHeap.set(num2, temp);
     }
-    public void setVertexHeap(ArrayList<StationNode> vertexHeap) {
-        this.vertexHeap = vertexHeap;
-    }
-
 
     public void PercolateDown(int i, int n){    //HW4 method 활용
         int child=2*i+1;

@@ -25,12 +25,19 @@ public class Subway {
 
     private static ArrayList<StationNode> readFile(String input,
                                                    HashMap<String, NodeLinkedList> nodeHashMap){
-        HashMap<String, StationNode> idHashMap = new HashMap<>();          //고유 번호로 구별하는 해시테이블
-        ArrayList<StationNode> stationNodes = new ArrayList<>();    //전체 노드를 담는 arraylist
+        ArrayList<StationNode> stationNodes = null;
         try {
             FileReader fileReader = new FileReader(new File(input));
-            BufferedReader bufferedReader = new BufferedReader(fileReader);
+            BufferedReader bufferedReaderForSize = new BufferedReader(fileReader);
             String line;
+            int graphSize = 0;
+            while (!bufferedReaderForSize.readLine().matches("\\s*")) {//필요한 vertex 수 찾기
+                graphSize++;
+            }
+            HashMap<String, StationNode> idHashMap = new HashMap<>(graphSize*2);          //고유 번호로 구별하는 해시테이블
+            stationNodes = new ArrayList<>(graphSize);    //전체 노드를 담는 arraylist
+            FileReader fileReader2 = new FileReader(new File(input));
+            BufferedReader bufferedReader = new BufferedReader(fileReader2);
             while (!(line = bufferedReader.readLine()).matches("\\s*")) {//공백 입력 전까지 역에 대한 정보가 입력
                 StationInfo(line,nodeHashMap,stationNodes,idHashMap);
             }
@@ -53,10 +60,6 @@ public class Subway {
             if (m.find()) {
                 String startStation = m.group("start"); //출발 역 이름
                 String endStation = m.group("end");     //도착 역 이름
-                if(!nodeHashMap.containsKey(startStation)){     //데이터에 없는 역을 검색하면 오류
-                    System.out.println("해당 이름의 역이 없습니다.");
-                    throw new Exception();
-                }
                 //출발 역에서 출발하는 호선에 따른 최단 경로를 모두 탐색하고, 가장 짧은 경로만 출력
                 ShortestPathSearch(nodeHashMap, stationNodes, startStation, endStation);
             }
@@ -75,8 +78,7 @@ public class Subway {
         if(m.find()) {   //입력이 적절한 형태이면
             String id = m.group("id");
             String name = m.group("name");
-            String newSubLine = m.group("line");
-            StationNode newNode = new StationNode(id, name, newSubLine);
+            StationNode newNode = new StationNode(id, name);
             //고유 번호, 역명, 호선 정보를 담은 노드 생성
 
             if (nodeHashMap.containsKey(name)) {
@@ -159,7 +161,7 @@ public class Subway {
             if (TotalDistance <= finalDistance)    //이미 더 짧은 경로가 탐색되었으면 현재 경로 무시
                 continue;
             TotalDistance = finalDistance;    //더 짧은 거리를 TotalDistance에 저장
-            path = PrintPath(finalNode);    //지금까지 얻은 최단 경로 중 짧은 값을 저장
+            path = PrintPath(finalNode, startStation);    //지금까지 얻은 최단 경로 중 짧은 값을 저장
         }
         System.out.println(path);   //경로 안의 역 이름 출력
         System.out.println(Long.toUnsignedString(TotalDistance));
@@ -167,12 +169,11 @@ public class Subway {
     }
 
     //전체 경로의 문자열을 반환
-    private static String PrintPath(StationNode finalNode){
+    private static String PrintPath(StationNode finalNode, String startStation){
         StringBuilder sb = new StringBuilder();   //전체 경로 출력을 위한 StringBuilder
-        for (StationNode node = finalNode; node != null;
+        for (StationNode node = finalNode; !node.getName().equals(startStation);
              node = node.getAdjacentNodes().getNodeInPath()) {
-            if (node.getDistance() != 0 &&
-                    node.getAdjacentNodes().getNodeInPath().getName().equals(node.getName())) {
+            if (node.getAdjacentNodes().getNodeInPath().getName().equals(node.getName())) {
                 // 환승일 때
                 sb.insert(0, "]");
                 sb.insert(0, node);
@@ -182,6 +183,7 @@ public class Subway {
                 sb.insert(0, node);
             sb.insert(0, " ");
         }
-        return sb.toString().trim();    //왼쪽 끝의 공백 제거
+        sb.insert(0,startStation);
+        return sb.toString();    //왼쪽 끝의 공백 제거
     }
 }

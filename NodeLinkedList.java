@@ -17,14 +17,6 @@ public class NodeLinkedList {
         return size;
     }
 
-    public void setHead(StationNode head) {
-        this.head = head;
-    }
-
-    public void setSize(int size) {
-        this.size = size;
-    }
-
     public void addNode(StationNode stationNode){   //이름이 같은 노드를 리스트에 추가
         for(StationNode ptr = head; ptr!=stationNode; ptr=ptr.getNext()) {
             //이름이 같은 노드끼리는 환승역 관계이므로 서로 5분 거리
